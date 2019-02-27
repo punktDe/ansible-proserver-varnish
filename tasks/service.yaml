@@ -1,0 +1,28 @@
+---
+- name: Configure Varnish service
+  lineinfile: path="{{ item.rc_conf }}" regexp="{{ item.regexp }}" line="{{ item.line }}" create=yes
+  loop_control:
+    label: "{{ item.rc_conf }} {{ item.line }}"
+  with_items:
+    - rc_conf: /usr/local/etc/rc.conf.d/varnishd
+      regexp: "^varnishd_listen="
+      line: >
+        varnishd_listen={{ varnish.bind_addr|trim|quote }}
+    - rc_conf: /usr/local/etc/rc.conf.d/varnishncsa
+      regexp: "^varnishncsa_logformat="
+      line: >
+        varnishncsa_logformat={{ varnish.logformat|trim|replace('"', '\"')|quote }}
+  notify:
+    - Restart Varnish
+
+- name: Enable service
+  lineinfile: path="{{ rc_conf }}" regexp="^{{ item }}_enable=" line="{{ item }}_enable="YES""
+  loop_control:
+    label: "{{ rc_conf }} service={{ item }}"
+  vars:
+    rc_conf: /etc/rc.conf
+  with_items:
+    - varnishd
+    - varnishncsa
+  notify:
+    - Start Varnish
