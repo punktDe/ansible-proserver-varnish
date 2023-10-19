@@ -8,6 +8,10 @@
       regexp: "^varnishd_listen="
       line: >
         varnishd_listen={{ varnish.bind_addr|trim|quote }}
+    - rc_conf: /usr/local/etc/rc.conf.d/varnishd
+      regexp: "^varnishd_storage="
+      line: >
+        varnishd_storage="{{ varnish.storage|trim|quote }}"
     - rc_conf: /usr/local/etc/rc.conf.d/varnishncsa
       regexp: "^varnishncsa_logformat="
       line: >
