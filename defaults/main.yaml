@@ -6,3 +6,4 @@ varnish:
   #logformat: '%h "%{X-Forwarded-For}i" %u %t "%r" %s %b "%{Referer}i" "%{User-agent}i" "%{Varnish:time_firstbyte}x" %{Varnish:handling}x "%{Content-Type}o" "%{Cookie}i"'
   logformat: >
     {"time": %{"%FT%T%z"}t, "remote_addr": "%h","remote_user": "%u","x_forwarded_for": "%{X-Forwarded-For}i","x_real_ip": "%{X-Real-IP}i","x_request_id": "%{X-Request-ID}i","hit_miss": "%{Varnish:hitmiss}x","body_bytes_sent": "%b","request_time": "%{Varnish:time_firstbyte}x","status": "%s","content_type": "%{Content-Type}o","request": "%r","host": "%{host}i","request_method": "%m","time_first_byte": "%{Varnish:time_firstbyte}x","handling": "%{Varnish:handling}x","http_referrer": "%{Referrer}i","http_user_agent": "%{User-agent}i"}
+  storage: malloc,512M
