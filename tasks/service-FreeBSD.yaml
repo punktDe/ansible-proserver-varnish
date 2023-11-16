@@ -5,6 +5,8 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     create: yes
+    mode: "0755"
+    owner: "root"
   with_items:
     - rc_conf: /usr/local/etc/rc.conf.d/varnishd
       regexp: "^varnishd_listen="

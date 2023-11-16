@@ -1,26 +1,26 @@
 ---
 - name: Start Varnish
-  service:
+  ansible.builtin.service:
     name: "{{ varnish.service_name }}"
     state: started
   register: varnishd_service_result
   notify: Start Varnishncsa
 
 - name: Restart Varnish
-  service:
+  ansible.builtin.service:
     name: "{{ varnish.service_name }}"
     state: restarted
   when: not (varnishd_service_result is defined and varnishd_service_result.changed)
   notify: Restart Varnishncsa
 
 - name: Start Varnishncsa
-  service:
+  ansible.builtin.service:
     name: varnishncsa
     state: started
   register: varnishncsa_service_result
 
 - name: Restart Varnishncsa
-  service:
+  ansible.builtin.service:
     name: varnishncsa
     state: restarted
   when: not (varnishncsa_service_result is defined and varnishncsa_service_result.changed)

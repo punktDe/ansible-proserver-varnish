@@ -7,18 +7,20 @@
   tasks:
     - name: Check Varnish status
       register: varnish_systemd
+      changed_when: no
       ansible.builtin.command:
         cmd: systemctl status varnish
 
     - name: Check Varnishncsa status
       register: varnishncsa_systemd
+      changed_when: no
       ansible.builtin.command:
         cmd: systemctl status varnishncsa
 
     - name: Debug
-      debug:
+      ansible.builtin.debug:
         var: varnish_systemd.stdout
 
     - name: Debug
-      debug:
+      ansible.builtin.debug:
         var: varnishncsa_systemd.stdout
