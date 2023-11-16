@@ -1,0 +1,48 @@
+---
+- name: Create systemd override folders
+  ansible.builtin.file:
+    path: /etc/systemd/system/{{ item }}.service.d
+    state: directory
+    owner: root
+    mode: "0755"
+  loop:
+    - varnish
+    - varnishncsa
+
+- name: Configure Varnish service override
+  notify:
+    - Restart Varnish
+  ansible.builtin.template:
+    dest: /etc/systemd/system/varnish.service.d/override.conf
+    src: varnish.service.d/override.conf
+    mode: "0644"
+    owner: root
+
+- name: Template a Varnishncsa wrapper script
+  notify:
+    - Restart Varnishncsa
+  ansible.builtin.copy:
+    content: |
+      #! /bin/sh
+      /usr/bin/varnishncsa -a -w /var/log/varnish/varnishncsa.log -D -P /run/varnishncsa/varnishncsa.pid -F {{ varnish.logformat | quote }}
+    dest: "/usr/local/bin/varnishncsa_systemd_wrapper"
+    mode: "0755"
+    owner: "root"
+
+- name: Configure Varnishncsa service override
+  notify:
+    - Restart Varnishncsa
+  ansible.builtin.template:
+    dest: /etc/systemd/system/varnishncsa.service.d/override.conf
+    src: varnishncsa.service.d/override.conf
+    mode: "0644"
+    owner: root
+
+- name: Enable services
+  loop:
+    - "{{ varnish.service_name }}"
+    - varnishncsa
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: "{{ item }}"
+    enabled: yes

@@ -1,14 +1,14 @@
 ---
 - name: Start Varnish
   service:
-    name: varnishd
+    name: "{{ varnish.service_name }}"
     state: started
   register: varnishd_service_result
   notify: Start Varnishncsa
 
 - name: Restart Varnish
   service:
-    name: varnishd
+    name: "{{ varnish.service_name }}"
     state: restarted
   when: not (varnishd_service_result is defined and varnishd_service_result.changed)
   notify: Restart Varnishncsa

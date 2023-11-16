@@ -1,5 +1,11 @@
 ---
 varnish:
+  service_name: >-
+    {%- if ansible_system == 'Linux' -%}
+      varnish
+    {%- else -%}
+      varnishd
+    {%- endif -%}
   prefix:
     config: /usr/local/etc/varnish
   bind_addr: "localhost:8080"
