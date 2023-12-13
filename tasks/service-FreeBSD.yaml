@@ -1,0 +1,31 @@
+---
+- name: Configure Varnish service
+  ansible.builtin.lineinfile:
+    path: "{{ item.rc_conf }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    create: yes
+    mode: "0755"
+    owner: "root"
+  with_items:
+    - rc_conf: /usr/local/etc/rc.conf.d/varnishd
+      regexp: "^varnishd_listen="
+      line: >
+        varnishd_listen={{ varnish.bind_addr | trim | quote }}
+    - rc_conf: /usr/local/etc/rc.conf.d/varnishd
+      regexp: "^varnishd_storage="
+      line: >
+        varnishd_storage="{{ varnish.storage | trim | quote }}"
+    - rc_conf: /usr/local/etc/rc.conf.d/varnishncsa
+      regexp: "^varnishncsa_logformat="
+      line: >
+        varnishncsa_logformat={{ varnish.logformat | trim | replace('"', '\"') | quote }}
+  notify:
+    - Restart Varnish
+
+- name: Enable service
+  notify:
+    - Start Varnish
+  ansible.builtin.service:
+    name: "{{ varnish.service_name }}"
+    enabled: yes

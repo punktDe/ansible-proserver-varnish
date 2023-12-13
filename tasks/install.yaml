@@ -1,0 +1,7 @@
+- name: Install varnish
+  notify:
+    - Start Varnish
+    - Start Varnishncsa
+  ansible.builtin.apt:
+    name: varnish
+    update_cache: yes

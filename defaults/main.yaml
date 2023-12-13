@@ -1,7 +1,18 @@
 ---
 varnish:
+  service_name: >-
+    {%- if ansible_system == 'Linux' -%}
+      varnish
+    {%- else -%}
+      varnishd
+    {%- endif -%}
   prefix:
-    config: /usr/local/etc/varnish
+    config: >-
+      {%- if ansible_system == 'Linux' -%}
+        /etc/varnish
+      {%- else -%}
+        /usr/local/etc/varnish
+      {%- endif -%}
   bind_addr: "localhost:8080"
   #logformat: '%h "%{X-Forwarded-For}i" %u %t "%r" %s %b "%{Referer}i" "%{User-agent}i" "%{Varnish:time_firstbyte}x" %{Varnish:handling}x "%{Content-Type}o" "%{Cookie}i"'
   logformat: >
