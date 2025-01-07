@@ -19,7 +19,7 @@
     - rc_conf: /usr/local/etc/rc.conf.d/varnishd
       regexp: "^varnishd_extra_flags="
       line: >
-        varnishd_extra_flags="{%- for flag,value in varnish.extra_flags.items() -%}-p {{ flag }}={{ value }}{{ " " if not loop.last else "" }}{%- endfor -%}"
+        varnishd_extra_flags="{%- for flag, value in varnish.extra_flags.items() -%}-p {{ flag }}={{ value }}{{ " " if not loop.last else "" }}{%- endfor -%}"
     - rc_conf: /usr/local/etc/rc.conf.d/varnishncsa
       regexp: "^varnishncsa_logformat="
       line: >
